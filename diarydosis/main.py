@@ -75,6 +75,39 @@ class LolSpectatorApi:
         url = f"{self.base_url}/lol/spectator/v5/active-games/by-summoner/{encrypted_puuid}"
         return self.send_secure_request(url)
 
+    def create_diarydosis_file(
+        self, file_path: str, encryption_key: str, game_id: str
+    ) -> bool:
+        """Read a template file and replace variables.
+
+        Args:
+            file_path (str): The path to the template file.
+            encryption_key (str): The encryption key to replace.
+            game_id (str): The game ID to replace.
+
+        Returns:
+            bool: True if the file was successfully replaced, False otherwise.
+        """
+        try:
+            with open(file_path, "r") as file:
+                file_content = file.read()
+        except FileNotFoundError:
+            print(f"Error: Template file not found: {file_path}")
+            return False
+
+        file_content = file_content.replace("{{encryptionKey}}", encryption_key)
+        file_content = file_content.replace("{{gameid}}", game_id)
+
+        # write file into system
+        try:
+            with open("diarydosis.bat", "w") as file:
+                file.write(file_content)
+        except IOError:
+            print("Error: Unable to write file diarydosis.bat")
+            return False
+
+        return True
+
 
 if __name__ == "__main__":
     # Load environment variables from .env file
@@ -91,12 +124,19 @@ if __name__ == "__main__":
             print(platform_data)
         else:
             print("Failed to retrieve platform data.")
-        
-        summoner_data = lol_spectator_api.get_summoner_data_by_name()
+
+        summoner_data = lol_spectator_api.get_summoner_data_by_name("dontejon3")
         # Get puuid from summoner_data
         if puuid := summoner_data.get("puuid"):
             active_games = lol_spectator_api.get_active_games_by_summoner(puuid)
             if active_games:
                 print(active_games)
-                print(f"encryptionKey: {active_games.get('observers').get('encryptionKey')}")
-                print(f"Game ID: {active_games.get('gameId')}")
+                encryptionKey = active_games.get("observers").get("encryptionKey")
+                game_id = str(active_games.get("gameId"))
+                is_success = lol_spectator_api.create_diarydosis_file(
+                    "diarydosis/windows_template.bat", encryptionKey, game_id
+                )
+                if is_success:
+                    print("Successfully created diarydosis.bat file.")
+                else:
+                    print("Failed to create diarydosis.bat file.")
