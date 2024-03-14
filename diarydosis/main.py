@@ -1,6 +1,3 @@
-# 1. http request to /lol/spectator/v5/active-games/by-summoner/{encryptedPUUID} using puuid hlpuNrEuoN6SijjQnbi3Qww7Jj75stvLHSd4XwVTlNjzXnTkvJe9v4AutMbim55G9jptzWz2HTA5Kw
-# 2. Edit and run .bat script using mentioned puuid and game encryptionKey
-
 import os
 import requests
 from dotenv import load_dotenv
@@ -125,7 +122,8 @@ if __name__ == "__main__":
         else:
             print("Failed to retrieve platform data.")
 
-        summoner_data = lol_spectator_api.get_summoner_data_by_name("dontejon3")
+        summoner_name = "alexanderstar"
+        summoner_data = lol_spectator_api.get_summoner_data_by_name(summoner_name)
         # Get puuid from summoner_data
         if puuid := summoner_data.get("puuid"):
             active_games = lol_spectator_api.get_active_games_by_summoner(puuid)
