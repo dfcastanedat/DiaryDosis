@@ -91,5 +91,12 @@ if __name__ == "__main__":
             print(platform_data)
         else:
             print("Failed to retrieve platform data.")
+        
         summoner_data = lol_spectator_api.get_summoner_data_by_name()
-        print(summoner_data)
+        # Get puuid from summoner_data
+        if puuid := summoner_data.get("puuid"):
+            active_games = lol_spectator_api.get_active_games_by_summoner(puuid)
+            if active_games:
+                print(active_games)
+                print(f"encryptionKey: {active_games.get('observers').get('encryptionKey')}")
+                print(f"Game ID: {active_games.get('gameId')}")
