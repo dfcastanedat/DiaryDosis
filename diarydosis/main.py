@@ -50,6 +50,19 @@ class LolSpectatorApi:
         url = f"{self.base_url}/lol/status/v4/platform-data"
         return self.send_secure_request(url)
 
+    def get_summoner_data_by_name(self, summoner_name: str = "alexanderstar") -> dict:
+        """
+        Get summoner data by name.
+
+        Args:
+            summoner_name (str): The summoner name.
+
+        Returns:
+            dict: A dictionary containing the summoner data.
+        """
+        url = f"{self.base_url}/lol/summoner/v4/summoners/by-name/{summoner_name}"
+        return self.send_secure_request(url)
+
     def get_active_games_by_summoner(self, encrypted_puuid: str) -> dict:
         """Get active games by summoner.
 
@@ -78,3 +91,5 @@ if __name__ == "__main__":
             print(platform_data)
         else:
             print("Failed to retrieve platform data.")
+        summoner_data = lol_spectator_api.get_summoner_data_by_name()
+        print(summoner_data)
