@@ -28,8 +28,9 @@ class LolSpectatorApi:
         """
         headers = {"X-Riot-Token": self.api_key} if self.api_key else {}
         try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()  # Raise an exception for 4XX or 5XX status codes
+            with requests.Session() as session:
+                response = session.get(url, headers=headers)
+                response.raise_for_status()  # Raise an exception for 4XX or 5XX status codes
         except requests.exceptions.RequestException as e:
             print(f"Error sending secure request: {e}")
             return None
@@ -67,6 +68,13 @@ if __name__ == "__main__":
     load_dotenv()
 
     # Initialize LolSpectatorApi with API key from environment variable
-    lol_spectator_api = LolSpectatorApi(api_key=os.getenv("RIOT_API_KEY"))
-    platform_data = lol_spectator_api.get_platform_data()  # Health check
-    print(platform_data)
+    riot_api_key = os.getenv("RIOT_API_KEY")
+    if not riot_api_key:
+        print("Error: Riot API key not found.")
+    else:
+        lol_spectator_api = LolSpectatorApi(api_key=riot_api_key)
+        platform_data = lol_spectator_api.get_platform_data()  # Health check
+        if platform_data:
+            print(platform_data)
+        else:
+            print("Failed to retrieve platform data.")
