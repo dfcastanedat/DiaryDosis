@@ -1,0 +1,25 @@
+// FIX THIS, is awful
+@mixin grid() {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0 56px;
+    max-width: 1920px;
+
+    @media screen and (min-width: 1600px) {
+        margin: 0 calc(50dvw - 960px);
+    }
+}
+
+@mixin span-all-columns() {
+    grid-column: 1 / -1;
+}
+
+@mixin span-columns($span, $start: unset) {
+    grid-column-start: $start;
+    grid-column-end: span $span;
+}
+
+@mixin shift ($cols) {
+    grid-column-start: $cols;
+}

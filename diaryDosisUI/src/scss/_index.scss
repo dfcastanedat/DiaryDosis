@@ -1,0 +1,9 @@
+@import "../scss/global";
+@import "../scss/config";
+@import "../scss/mixins";
+@import "../scss/components";
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}

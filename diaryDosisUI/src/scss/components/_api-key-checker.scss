@@ -1,0 +1,27 @@
+$api-key-checker-height: 300px;
+
+.api-key-checker {
+    position: relative;
+    background-color: rgb(129, 65, 65);
+    width: 100dvw;
+    top: 0;
+    max-height: $api-key-checker-height;
+    transition: top 0.5s cubic-bezier(0.35, 0, 0.3, 0.99);
+
+    &--closed {
+        top: max(-100dvh, -#{$api-key-checker-height});
+    }
+
+    &__inner {
+        @include grid();
+        padding: $space-16;
+    }
+
+    &__form {
+        @include span-all-columns();
+        @include span-columns(3);
+        display: flex;
+        flex-direction: column;
+        gap: $space-16;
+    }
+}
